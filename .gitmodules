@@ -1,0 +1,3 @@
+[submodule "PSICreator"]
+	path = PSICreator
+	url = https://github.com/Codemitry/PSICreator
