@@ -1,0 +1,1 @@
+expect fun simpleFunction(a: Int? = null, b: (str: String) -> Unit, c: String)

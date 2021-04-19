@@ -1,0 +1,1 @@
+expect fun simpleFunction(): kotlin.collections.Set<Int>
