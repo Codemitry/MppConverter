@@ -1,35 +1,39 @@
 package visitor
 
-import incompatibleWithExpectFunModifiers
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtTreeVisitorVoid
+import copyConstructorPropertiesToBody
+import deleteModifiersIncompatibleWithExpect
+import org.jetbrains.kotlin.psi.*
+import replaceConstructorPropertiesWithParameters
 
 class KtRealizationEraserVisitorVoid : KtTreeVisitorVoid() {
     override fun visitProperty(property: KtProperty) {
+        println("VISIT property")
+
         super.visitProperty(property)
-        for (modifier in incompatibleWithExpectFunModifiers) {
-            property.removeModifier(modifier)
-        }
-        property.delegateExpressionOrInitializer?.delete()
+
+        property.deleteModifiersIncompatibleWithExpect()
+        property.delegate?.delete()
+        property.initializer?.delete()
         property.equalsToken?.delete()
         property.setter?.delete()
         property.getter?.delete()
     }
     override fun visitNamedFunction(function: KtNamedFunction) {
+        println("VISIT function")
         super.visitNamedFunction(function)
-        for (modifier in incompatibleWithExpectFunModifiers) {
-            function.removeModifier(modifier)
-        }
+
+        function.deleteModifiersIncompatibleWithExpect()
         function.bodyExpression?.delete()
         function.equalsToken?.delete()
     }
 
     override fun visitClass(klass: KtClass) {
+        println("VISIT class")
         super.visitClass(klass)
-        for (modifier in incompatibleWithExpectFunModifiers) {
-            klass.removeModifier(modifier)
-        }
+
+        klass.deleteModifiersIncompatibleWithExpect()
+
+        klass.copyConstructorPropertiesToBody()
+        klass.replaceConstructorPropertiesWithParameters()
     }
 }
