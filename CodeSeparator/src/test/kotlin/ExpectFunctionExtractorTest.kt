@@ -24,7 +24,7 @@ class ExpectFunctionExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleFunction/simpleFunction.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleFunction/simpleFunctionExpect.kt")
 
-        assertPsi(findKtNamedFunction(expectPsi), getExpectFun(findKtNamedFunction(psi)))
+        assertPsi(findKtNamedFunction(expectPsi), findKtNamedFunction(psi).getExpect())
     }
 
     @Test
@@ -32,7 +32,7 @@ class ExpectFunctionExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleFunctionWithReturn/simpleFunction.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleFunctionWithReturn/simpleFunctionExpect.kt")
 
-        assertPsi(findKtNamedFunction(expectPsi), getExpectFun(findKtNamedFunction(psi)))
+        assertPsi(findKtNamedFunction(expectPsi), findKtNamedFunction(psi).getExpect())
     }
 
     @Test
@@ -40,7 +40,7 @@ class ExpectFunctionExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleFunctionWithPrivateModifier/simpleFunction.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleFunctionWithPrivateModifier/simpleFunctionExpect.kt")
 
-        assertPsi(findKtNamedFunction(expectPsi), getExpectFun(findKtNamedFunction(psi)))
+        assertPsi(findKtNamedFunction(expectPsi), findKtNamedFunction(psi).getExpect())
     }
 
     @Test
@@ -48,7 +48,7 @@ class ExpectFunctionExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleFunctionWithAccessModifier/simpleFunction.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleFunctionWithAccessModifier/simpleFunctionExpect.kt")
 
-        assertPsi(findKtNamedFunction(expectPsi), getExpectFun(findKtNamedFunction(psi)))
+        assertPsi(findKtNamedFunction(expectPsi), findKtNamedFunction(psi).getExpect())
     }
 
     @Test
@@ -56,6 +56,6 @@ class ExpectFunctionExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleFunctionWithParameters/simpleFunction.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleFunctionWithParameters/simpleFunctionExpect.kt")
 
-        assertPsi(findKtNamedFunction(expectPsi), getExpectFun(findKtNamedFunction(psi)))
+        assertPsi(findKtNamedFunction(expectPsi), findKtNamedFunction(psi).getExpect())
     }
 }

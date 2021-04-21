@@ -23,7 +23,7 @@ class ExpectClassExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleClass/simpleClass.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleClass/simpleClassExpect.kt")
 
-        assertPsi(findKtClass(expectPsi), getExpectClass(findKtClass(psi)))
+        assertPsi(findKtClass(expectPsi), findKtClass(psi).getExpect())
     }
 
     @Test
@@ -31,7 +31,7 @@ class ExpectClassExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleDataClass/simpleClass.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleDataClass/simpleClassExpect.kt")
 
-        assertPsi(findKtClass(expectPsi), getExpectClass(findKtClass(psi)))
+        assertPsi(findKtClass(expectPsi), findKtClass(psi).getExpect())
     }
 
     @Test
@@ -39,7 +39,7 @@ class ExpectClassExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleClassWithProperties/simpleClass.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleClassWithProperties/simpleClassExpect.kt")
 
-        assertPsi(findKtClass(expectPsi), getExpectClass(findKtClass(psi)))
+        assertPsi(findKtClass(expectPsi), findKtClass(psi).getExpect())
     }
 
     @Test
@@ -47,7 +47,7 @@ class ExpectClassExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleClassWithConstructor/simpleClass.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleClassWithConstructor/simpleClassExpect.kt")
 
-        assertPsi(findKtClass(expectPsi), getExpectClass(findKtClass(psi)))
+        assertPsi(findKtClass(expectPsi), findKtClass(psi).getExpect())
     }
 
     @Test
@@ -55,7 +55,7 @@ class ExpectClassExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleClassWithSecondaryConstructor/simpleClass.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleClassWithSecondaryConstructor/simpleClassExpect.kt")
 
-        assertPsi(findKtClass(expectPsi), getExpectClass(findKtClass(psi)))
+        assertPsi(findKtClass(expectPsi), findKtClass(psi).getExpect())
     }
 
     @Test
@@ -63,6 +63,6 @@ class ExpectClassExtractorTest {
         val psi = psiCreator.getPSIForFile("$res/simpleClassWithNestedClass/simpleClass.kt")
         val expectPsi = psiCreator.getPSIForFile("$res/simpleClassWithNestedClass/simpleClassExpect.kt")
 
-        assertPsi(findKtClass(expectPsi), getExpectClass(findKtClass(psi)))
+        assertPsi(findKtClass(expectPsi), findKtClass(psi).getExpect())
     }
 }

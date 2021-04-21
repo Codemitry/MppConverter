@@ -32,11 +32,10 @@ fun convert(path: String) {
             if (!klass.isTopLevel())
                 return
 
-            getExpectClass(klass)
-
+            klass.getExpect()
             println("visit class: ${klass.name}")
 
-            println("expect: ${getExpectClass(klass).text}\n")
+            println("expect: ${klass.getExpect().text}\n")
         }
 
     })
@@ -122,8 +121,8 @@ fun KtClass.copyConstructorPropertiesToBody() {
 }
 
 
-fun getExpectFun(function: KtNamedFunction): PsiElement {
-    val copy = function.copy() as KtNamedFunction
+fun KtNamedFunction.getExpect(): PsiElement {
+    val copy = copy() as KtNamedFunction
 
     copy.deleteModifiersIncompatibleWithExpect()
 
@@ -134,8 +133,8 @@ fun getExpectFun(function: KtNamedFunction): PsiElement {
     return copy
 }
 
-fun getActualFun(function: KtNamedFunction): PsiElement {
-    val copy = function.copy() as KtNamedFunction
+fun KtNamedFunction.getActual(): PsiElement {
+    val copy = copy() as KtNamedFunction
 
     copy.deleteModifiersIncompatibleWithExpect()
 
@@ -145,8 +144,8 @@ fun getActualFun(function: KtNamedFunction): PsiElement {
 }
 
 
-fun getExpectClass(klass: KtClass): PsiElement {
-    val copy = klass.copy() as KtClass
+fun KtClass.getExpect(): PsiElement {
+    val copy = copy() as KtClass
 
     copy.deleteModifiersIncompatibleWithExpect()
 
