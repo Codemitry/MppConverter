@@ -2,43 +2,39 @@ import com.intellij.psi.PsiElement
 import com.spbpu.mppconverter.kootstrap.PSICreator
 import org.jetbrains.kotlin.lexer.KtTokens.*
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.psi.addRemoveModifier.addModifier
 import org.jetbrains.kotlin.psi.psiUtil.isPropertyParameter
+import visitor.KtActualMakerVisitorVoid
 import visitor.KtRealizationEraserVisitorVoid
 
 fun main() {
-    convert("W:\\Kotlin\\Projects\\MPP\\src\\commonMain\\kotlin\\main.kt")
-//    convert("W:\\Kotlin\\Projects\\MppConverter\\CodeSeparator\\src\\main\\kotlin\\SourceSets.kt")
+    convert("W:\\Kotlin\\Projects\\MppConverter\\CodeSeparator\\src\\test\\resources\\simpleClassWithSecondaryConstructor\\simpleClass.kt")
 }
 
 
 fun convert(path: String) {
     val creator = PSICreator()
-
     val ktFile = creator.getPSIForFile(path)
-    PSICreator.analyze(ktFile)
 
-    ktFile.accept(object : KtTreeVisitorVoid() {
-        override fun visitNamedFunction(function: KtNamedFunction) {
-            super.visitNamedFunction(function)
-            if (!function.isTopLevel)
-                return
+    println("===== jvm =====")
+    println(ktFile.text)
 
-//            getExpectFun(function)
-//            getActualFun(function)
-        }
-        override fun visitClass(klass: KtClass) {
-            super.visitClass(klass)
-            if (!klass.isTopLevel())
-                return
+    println("\n===== expect =====")
+    println(ktFile.getExpect().text)
+    println("\n===== actual =====")
+    println(ktFile.getActual().text)
 
-            klass.getExpect()
-            println("visit class: ${klass.name}")
+}
 
-            println("expect: ${klass.getExpect().text}\n")
-        }
+fun KtFile.getExpect(): KtFile {
+    val copy = copy() as KtFile
+    copy.accept(KtRealizationEraserVisitorVoid())
+    return copy
+}
 
-    })
+fun KtFile.getActual(): KtFile {
+    val copy = copy() as KtFile
+    copy.accept(KtActualMakerVisitorVoid())
+    return copy
 }
 
 val incompatibleWithExpectFunModifiers = listOf(
@@ -55,20 +51,21 @@ fun KtModifierListOwner.deleteModifiersIncompatibleWithExpect() {
     }
 }
 
+fun KtModifierListOwner.deleteModifiersIncompatibleWithActual() {
+    for (modifier in incompatibleWithActualFunModifiers) {
+        this.removeModifier(modifier)
+    }
+}
+
 fun KtClassBody.addInside(element: PsiElement) {
     addAfter(element, lBrace)
     addAfter(KtPsiFactory(element).createNewLine(), lBrace)
 }
 
 fun KtSecondaryConstructor.deleteDelegationAndBody() {
-    val factory = KtPsiFactory(this)
-
-    val newSecondaryConstructor = factory.createSecondaryConstructor("private constructor()")
-    modifierList?.let { modifierList -> newSecondaryConstructor.modifierList?.replace(modifierList) }
-        ?: newSecondaryConstructor.removeModifier(PRIVATE_KEYWORD)
-    valueParameterList?.let { valParList -> newSecondaryConstructor.valueParameterList?.replace(valParList) }
-
-    replace(newSecondaryConstructor)
+    this.getDelegationCallOrNull()?.delete()
+    this.bodyBlockExpression?.delete()
+    this.colon?.delete()
 }
 
 fun createKtParameterFromProperty(paramProperty: KtParameter): KtParameter {
@@ -101,6 +98,11 @@ fun createKtPropertyWithoutInitializer(oldParamProperty: KtParameter): KtPropert
     return ktProperty
 }
 
+fun KtParameter.removeInitializer() {
+    defaultValue?.delete()
+    equalsToken?.delete()
+}
+
 
 fun KtClass.replaceConstructorPropertiesWithParameters() {
     primaryConstructorParameters.forEach { param ->
@@ -123,11 +125,8 @@ fun KtClass.copyConstructorPropertiesToBody() {
 
 fun KtNamedFunction.getExpect(): PsiElement {
     val copy = copy() as KtNamedFunction
-
-    copy.deleteModifiersIncompatibleWithExpect()
-
     copy.addModifier(EXPECT_KEYWORD)
-
+    copy.deleteModifiersIncompatibleWithExpect()
     copy.accept(KtRealizationEraserVisitorVoid())
 
     return copy
@@ -135,24 +134,21 @@ fun KtNamedFunction.getExpect(): PsiElement {
 
 fun KtNamedFunction.getActual(): PsiElement {
     val copy = copy() as KtNamedFunction
-
-    copy.deleteModifiersIncompatibleWithExpect()
-
     copy.addModifier(ACTUAL_KEYWORD)
-
+    copy.deleteModifiersIncompatibleWithExpect()
     return copy
 }
 
 
 fun KtClass.getExpect(): PsiElement {
     val copy = copy() as KtClass
-
-    copy.deleteModifiersIncompatibleWithExpect()
-
-    addModifier(copy, EXPECT_KEYWORD)
-
     copy.accept(KtRealizationEraserVisitorVoid())
+    return copy
+}
 
+fun KtClass.getActual(): PsiElement {
+    val copy = copy() as KtClass
+    copy.accept(KtActualMakerVisitorVoid())
     return copy
 }
 

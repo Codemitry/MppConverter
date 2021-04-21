@@ -4,18 +4,18 @@ import copyConstructorPropertiesToBody
 import deleteDelegationAndBody
 import deleteModifiersIncompatibleWithExpect
 import org.jetbrains.kotlin.lexer.KtTokens.DATA_KEYWORD
+import org.jetbrains.kotlin.lexer.KtTokens.EXPECT_KEYWORD
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.resolve.BindingContext
 import replaceConstructorPropertiesWithParameters
 
 
-lateinit var context: BindingContext
-
 class KtRealizationEraserVisitorVoid : KtTreeVisitorVoid() {
     override fun visitProperty(property: KtProperty) {
-        println("VISIT property")
-
         super.visitProperty(property)
+
+        if (property.isTopLevel) {
+            property.addModifier(EXPECT_KEYWORD)
+        }
 
         // mocks for types with initializer
         if (property.hasInitializer()) {
@@ -29,8 +29,11 @@ class KtRealizationEraserVisitorVoid : KtTreeVisitorVoid() {
         property.getter?.delete()
     }
     override fun visitNamedFunction(function: KtNamedFunction) {
-        println("VISIT function")
         super.visitNamedFunction(function)
+
+        if (function.isTopLevel) {
+            function.addModifier(EXPECT_KEYWORD)
+        }
 
        // what is type of fun?
 //        if (function.typeReference == null) {
@@ -43,8 +46,11 @@ class KtRealizationEraserVisitorVoid : KtTreeVisitorVoid() {
     }
 
     override fun visitClass(klass: KtClass) {
-        println("VISIT class")
         super.visitClass(klass)
+
+        if (klass.isTopLevel()) {
+            klass.addModifier(EXPECT_KEYWORD)
+        }
 
         if (klass.isData()) klass.removeModifier(DATA_KEYWORD)
         klass.deleteModifiersIncompatibleWithExpect()

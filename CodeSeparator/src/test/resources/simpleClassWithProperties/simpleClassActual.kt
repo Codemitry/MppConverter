@@ -3,7 +3,7 @@ actual class simpleClass {
     actual val aa: Int = 13
     actual var late: Set<Int>
     actual var privateVar = "Hello"
-    actual internal val internalVal = 130L
+    internal actual val internalVal = 130L
 
     actual val getter: Int
         get() = 5
@@ -23,5 +23,5 @@ actual class simpleClass {
         }
 
     actual var delegated: Int by lazy { println("lazy"); 0 }
-        private set
+    private set
 }
