@@ -1,2 +1,2 @@
-actual class simpleClass(val a: Int, private var b: Double, c: Long) {
+actual class simpleClass actual constructor(actual val a: Int, actual var b: Double, c: Long) {
 }

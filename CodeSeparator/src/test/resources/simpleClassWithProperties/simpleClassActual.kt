@@ -1,8 +1,8 @@
 actual class simpleClass {
     actual val a: Int?
     actual val aa: Int = 13
-    actual lateinit var late: Set<Int>
-    actual private var privateVar = "Hello"
+    actual var late: Set<Int>
+    actual var privateVar = "Hello"
     actual internal val internalVal = 130L
 
     actual val getter: Int

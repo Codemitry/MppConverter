@@ -2,8 +2,8 @@ expect class simpleClass {
     val a: Int?
     val aa: Int
     var late: Set<Int>
-    var privateVar
-    internal val internalVal
+    var privateVar: String
+    internal val internalVal: Long
 
     val getter: Int
 

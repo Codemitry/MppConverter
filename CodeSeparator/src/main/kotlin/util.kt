@@ -61,6 +61,17 @@ fun KtClassBody.addInside(element: PsiElement) {
     addAfter(KtPsiFactory(element).createNewLine(), lBrace)
 }
 
+fun KtSecondaryConstructor.deleteDelegationAndBody() {
+    val factory = KtPsiFactory(this)
+
+    val newSecondaryConstructor = factory.createSecondaryConstructor("private constructor()")
+    modifierList?.let { modifierList -> newSecondaryConstructor.modifierList?.replace(modifierList) }
+        ?: newSecondaryConstructor.removeModifier(PRIVATE_KEYWORD)
+    valueParameterList?.let { valParList -> newSecondaryConstructor.valueParameterList?.replace(valParList) }
+
+    replace(newSecondaryConstructor)
+}
+
 fun createKtParameterFromProperty(paramProperty: KtParameter): KtParameter {
     val factory = KtPsiFactory(paramProperty)
 
